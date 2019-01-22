@@ -24,20 +24,35 @@ if __name__ == '__main__':
     config = SafeConfigParser()
     config.read(basedir+'/tagger.config')
 
-    GH_TOKEN = config.get('github', 'token')
-    repo_pattern = config.get('github', 'repo-pattern')
-    org = config.get('github', 'org')
+    try:
+        GH_TOKEN = config.get('github', 'token')
+    except:
+        sys.exit("ERROR: github token is mandatory")
 
-    if not repo_pattern:
+    try:
+        repo_pattern = config.get('github', 'repo-pattern')
+    except:
         repo_pattern="eyp-"
 
-    if not org:
-        org = "NTTCom-MS"
+    try:
+        gh_username = config.get('github', 'username')
+    except:
+        gh_username = "NTTCom-MS"
+
+    try:
+        skip_forked_repos = config.getboolean('github', 'skip-forked-repos')
+    except:
+        skip_forked_repos=False
 
     g = Github(GH_TOKEN)
 
-    for repo in g.get_organization(org).get_repos():
+    for repo in g.get_user(gh_username).get_repos():
         if repo_pattern in repo.name:
+
+            if skip_forked_repos and repo.fork:
+                print("skipping forked repo: {}".format(repo.name))
+                continue
+
             try:
                 metadata = json.loads(repo.get_contents("metadata.json").decoded_content)
             except:
