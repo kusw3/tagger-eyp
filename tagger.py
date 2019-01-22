@@ -26,14 +26,17 @@ if __name__ == '__main__':
 
     GH_TOKEN = config.get('github', 'token')
     repo_pattern = config.get('github', 'repo-pattern')
+    org = config.get('github', 'org')
 
     if not repo_pattern:
-      repo_pattern="eyp-"
+        repo_pattern="eyp-"
 
+    if not org:
+        org = "NTTCom-MS"
 
     g = Github(GH_TOKEN)
 
-    for repo in g.get_organization("NTTCom-MS").get_repos():
+    for repo in g.get_organization(org).get_repos():
         if repo_pattern in repo.name:
             try:
                 metadata = json.loads(repo.get_contents("metadata.json").decoded_content)
