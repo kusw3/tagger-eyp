@@ -20,7 +20,7 @@ repo-pattern=eyp-
 ```
 
 * token: You need a personal access token with repo rights in gihub. [GitHub authorizing a personal token](https://help.github.com/articles/authorizing-a-personal-access-token-for-use-with-a-saml-single-sign-on-organization/) Take into account this token is for your user if you created it following the documentation above. In case this is script is going to be run from a server, use an access token for a generic (bot) account.
-* repo-pattern: String to indetify repos that need version tagging. Repos that it's repo name contains this string will download it's metadata.json file and will try to identify it's version
+* repo-pattern: String to indetify repos that need version tagging. Repos that it's repo name contains this string will download it's metadata.json file and will try to identify it's version (default: eyp-)
 
 ## Execute
 
