@@ -25,38 +25,58 @@ if __name__ == '__main__':
     config.read(basedir+'/tagger.config')
 
     try:
-        GH_TOKEN = config.get('github', 'token')
+        GH_TOKEN = config.get('github', 'token').strip('"').strip()
     except:
-        sys.exit("ERROR: github token is mandatory")
+        sys.exit("ERROR: PAT is mandatory")
 
     try:
-        repo_pattern = config.get('github', 'repo-pattern')
+        gh_username = config.get('github', 'username').strip('"').strip()
     except:
-        repo_pattern="eyp-"
+        sys.exit("ERROR: github username is mandatory")
 
     try:
-        gh_username = config.get('github', 'username')
+        repo_pattern = config.get('github', 'repo-pattern').strip('"').strip()
     except:
-        gh_username = "NTTCom-MS"
+        repo_pattern=""
 
     try:
         skip_forked_repos = config.getboolean('github', 'skip-forked-repos')
     except:
         skip_forked_repos=False
 
+    try:
+        debug = config.getboolean('github', 'debug')
+    except:
+        debug=False
+
+    if debug:
+        print("== config ==")
+        print("username: "+gh_username)
+        print("repo_pattern: "+repo_pattern)
+        print("skip_forked_repos: "+str(skip_forked_repos))
+
     g = Github(GH_TOKEN)
 
     for repo in g.get_user(gh_username).get_repos():
         if repo_pattern in repo.name:
+
+            if debug:
+                print("considering: "+repo.name+" - is fork? "+str(repo.fork))
 
             if skip_forked_repos and repo.fork:
                 print("skipping forked repo: {}".format(repo.name))
                 continue
 
             try:
-                metadata = json.loads(repo.get_contents("metadata.json").decoded_content)
-            except:
-                print("ERROR: retrieving metadata for {}".format(repo.name))
+                metadata_json = repo.get_contents("metadata.json").decoded_content
+                if type(metadata_json) is bytes:
+                    metadata_json_str = metadata_json.decode("utf-8")
+                elif type(metadata_json) is str:
+                    metadata_json_str = metadata_json
+
+                metadata = json.loads(metadata_json_str)
+            except Exception as e:
+                print("ERROR: retrieving metadata for {}: {}".format(repo.name,str(e)))
                 continue
 
             try:
@@ -73,3 +93,6 @@ if __name__ == '__main__':
                 print("{} not updated. Metadata version: {} - Release: {}".format(repo.name, metadata['version'], latest_release))
                 repo.create_git_release(tag=metadata['version'],name=metadata['version'],message='NTTCMS EYP Tagger was here')
                 print("!! {} relased to latest version: {}".format(repo.name, metadata['version']))
+            else:
+                if debug:
+                    print("No need to update {}".format(repo.name))
