@@ -8,11 +8,11 @@ Script to tag a release on each eyp module in NTTCMS repos
 
 import os
 import sys
+import json
 import argparse
 from github import Github
-import json
-from distutils.version import LooseVersion
 from configparser import SafeConfigParser
+from distutils.version import LooseVersion
 
 if __name__ == '__main__':
 
@@ -25,12 +25,19 @@ if __name__ == '__main__':
     config.read(basedir+'/tagger.config')
 
     GH_TOKEN = config.get('github', 'token')
+    repo_pattern = config.get('github', 'repo-pattern')
+    org = config.get('github', 'org')
 
+    if not repo_pattern:
+        repo_pattern="eyp-"
+
+    if not org:
+        org = "NTTCom-MS"
 
     g = Github(GH_TOKEN)
 
-    for repo in g.get_organization("NTTCom-MS").get_repos():
-        if "eyp-" in repo.name:
+    for repo in g.get_organization(org).get_repos():
+        if repo_pattern in repo.name:
             try:
                 metadata = json.loads(repo.get_contents("metadata.json").decoded_content)
             except:
