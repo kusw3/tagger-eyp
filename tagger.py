@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 """
-Script to tag a release on each eyp module in NTTCMS repos
+Script to tag a releases
 """
 
 import os
