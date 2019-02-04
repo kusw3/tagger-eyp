@@ -17,12 +17,12 @@ from distutils.version import LooseVersion
 if __name__ == '__main__':
 
     try:
-        basedir = sys.argv[1]
+        config_file = sys.argv[1]
     except IndexError:
-        basedir = '.'
+        config_file = './tagger.config'
 
     config = SafeConfigParser()
-    config.read(basedir+'/tagger.config')
+    config.read(config_file)
 
     try:
         GH_TOKEN = config.get('github', 'token').strip('"').strip()
