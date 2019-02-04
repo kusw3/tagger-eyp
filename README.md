@@ -32,3 +32,9 @@ Just
 ```
 python tagger.py
 ```
+
+Specify a custom config file:
+
+```
+python tagger.py configfile
+```
