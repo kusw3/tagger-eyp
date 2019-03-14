@@ -37,7 +37,12 @@ if __name__ == '__main__':
     try:
         repo_pattern = config.get('github', 'repo-pattern').strip('"').strip()
     except:
-        repo_pattern=""
+        repo_pattern=''
+
+    try:
+        message = config.get('github', 'message').strip('"').strip()
+    except:
+        message=''
 
     try:
         skip_forked_repos = config.getboolean('github', 'skip-forked-repos')
@@ -91,7 +96,7 @@ if __name__ == '__main__':
             if metadata['version'] != latest_release:
                 # Create a new release as metadata version
                 print("{} not updated. Metadata version: {} - Release: {}".format(repo.name, metadata['version'], latest_release))
-                repo.create_git_release(tag=metadata['version'],name=metadata['version'],message='NTTCMS EYP Tagger was here')
+                repo.create_git_release(tag=metadata['version'],name=metadata['version'],message=message)
                 print("!! {} relased to latest version: {}".format(repo.name, metadata['version']))
             else:
                 if debug:
