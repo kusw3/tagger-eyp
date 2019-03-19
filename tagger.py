@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 """
-Script to tag a releases
+github release bot for puppet modules
 """
 
 import os
