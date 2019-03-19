@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
-
 """
 github release bot for puppet modules
 """
@@ -11,8 +9,12 @@ import sys
 import json
 import argparse
 from github import Github
+from __future__ import print_function
 from configparser import SafeConfigParser
 from distutils.version import LooseVersion
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 if __name__ == '__main__':
 
@@ -82,7 +84,7 @@ if __name__ == '__main__':
 
                 metadata = json.loads(metadata_json_str)
             except Exception as e:
-                print("ERROR: retrieving metadata for {}: {}".format(repo.name,str(e)))
+                eprint("ERROR: retrieving metadata for {}: {}".format(repo.name,str(e)))
                 continue
 
             try:
@@ -91,7 +93,7 @@ if __name__ == '__main__':
                     if LooseVersion(latest_release) < LooseVersion(rel.title):
                         latest_release = rel.title
             except:
-                print("ERROR: retrieving releases for {}".format(repo.name))
+                eprint("ERROR: retrieving releases for {}".format(repo.name))
                 continue
 
             if metadata['version'] != latest_release:
