@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 
 """
 github release bot for puppet modules
@@ -9,7 +10,6 @@ import sys
 import json
 import argparse
 from github import Github
-from __future__ import print_function
 from configparser import SafeConfigParser
 from distutils.version import LooseVersion
 
