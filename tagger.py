@@ -69,7 +69,8 @@ if __name__ == '__main__':
                 print("considering: "+repo.name+" - is fork? "+str(repo.fork))
 
             if skip_forked_repos and repo.fork:
-                print("skipping forked repo: {}".format(repo.name))
+                if debug:
+                    print("skipping forked repo: {}".format(repo.name))
                 continue
 
             try:
@@ -95,9 +96,9 @@ if __name__ == '__main__':
 
             if metadata['version'] != latest_release:
                 # Create a new release as metadata version
-                print("{} not updated. Metadata version: {} - Release: {}".format(repo.name, metadata['version'], latest_release))
                 repo.create_git_release(tag=metadata['version'],name=metadata['version'],message=message)
-                print("!! {} relased to latest version: {}".format(repo.name, metadata['version']))
+                if debug:
+                    print("Updating {} - Latest version: {} - Was: {}".format(repo.name, metadata['version'], latest_release))
             else:
                 if debug:
                     print("No need to update {}".format(repo.name))
