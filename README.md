@@ -24,6 +24,7 @@ username=NTTCom-MS
 * **repo-pattern**: String to indetify repos that need version tagging. Repos that it's repo name contains this string will download it's metadata.json file and will try to identify it's version (default: empty string)
 * **skip-forked-repos**: Determines if forked repos are skipped (defalt: false)
 * **debug**: Enables debug mode (default: false)
+* **message**: Release message
 
 ## Execute
 
@@ -31,4 +32,10 @@ Just
 
 ```
 python tagger.py
+```
+
+Specify a custom config file:
+
+```
+python tagger.py configfile
 ```
