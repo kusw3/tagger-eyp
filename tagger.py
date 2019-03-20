@@ -114,4 +114,7 @@ if __name__ == '__main__':
             # update repo title
             if update_description:
                 if metadata['summary']:
-                    repo.edit(description=metadata['version'])
+                    if repo.description!=metadata['summary']
+                        repo.edit(description=metadata['summary'])
+                        if debug:
+                            print("Updating {} - setting description: {}".format(repo.name, metadata['summary']))
