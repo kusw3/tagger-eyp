@@ -39,22 +39,27 @@ if __name__ == '__main__':
     try:
         repo_pattern = config.get('github', 'repo-pattern').strip('"').strip()
     except:
-        repo_pattern=''
+        repo_pattern = ''
 
     try:
         message = config.get('github', 'message').strip('"').strip()
     except:
-        message=''
+        message = ''
 
     try:
         skip_forked_repos = config.getboolean('github', 'skip-forked-repos')
     except:
-        skip_forked_repos=False
+        skip_forked_repos = False
 
     try:
         debug = config.getboolean('github', 'debug')
     except:
-        debug=False
+        debug = False
+
+    try:
+        update_description = config.getboolean('github', 'update-description')
+    except:
+        update_description = True
 
     if debug:
         print("== config ==")
@@ -87,6 +92,7 @@ if __name__ == '__main__':
                 eprint("ERROR: retrieving metadata for {}: {}".format(repo.name,str(e)))
                 continue
 
+            # releases
             try:
                 latest_release = '0.0.0'
                 for rel in repo.get_releases():
@@ -105,4 +111,7 @@ if __name__ == '__main__':
                 if debug:
                     print("No need to update {}".format(repo.name))
 
-            #TODO: update repo title
+            # update repo title
+            if update_description:
+                if metadata['summary']:
+                    repo.edit(description=metadata['version'])
